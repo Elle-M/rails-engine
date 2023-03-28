@@ -73,4 +73,14 @@ describe "Items API" do
     expect(response.status).to eq(200)
     expect(Item.last.name).to_not eq(previous_name)
   end
+
+  it "can delete an item" do
+    item = Item.last
+
+    expect{ delete "/api/v1/items/#{item.id}" }.to change(Item, :count).by(-1)
+
+    expect(response.status).to eq(200)
+    expect{Item.find(item.id)}.to raise_error(ActiveRecord::RecordNotFound)
+    expect(Item.count).to eq(2)
+  end
 end
