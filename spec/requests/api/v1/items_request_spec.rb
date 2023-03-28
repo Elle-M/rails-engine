@@ -61,7 +61,6 @@ describe "Items API" do
   end
 
   xit "can update an existing item" do
-    # id = create(:item).id
     previous_name = Item.last.name
     item_params = { name: "Hat", description: "Soft" }
 
