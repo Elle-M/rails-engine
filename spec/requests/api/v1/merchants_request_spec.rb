@@ -15,6 +15,7 @@ describe "Merchants API" do
 
     merchants.each do |merchant|
       expect(merchant).to have_key("name")
+      # expect(merchant[:data][:attributes]).to have_key("name")
       expect(merchant["name"]).to be_a(String)
     end
   end
@@ -29,7 +30,8 @@ describe "Merchants API" do
     expect(response).to be_successful
     expect(response.status).to eq(200)
 
-    expect(merchant).to have_key("name")
+      expect(merchant).to have_key("name")
+    # expect(merchant[:data][:attributes]).to have_key("name")
     expect(merchant["name"]).to be_a(String)
   end
 
