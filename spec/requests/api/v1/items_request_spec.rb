@@ -1,8 +1,13 @@
 require "rails_helper"
 
 describe "Items API" do
-  it "sends a list of items" do
+  before :each do
+    create_list(:merchant, 3)
     create_list(:item, 3)
+  end
+
+  it "sends a list of items" do
+    # create_list(:item, 3)
 
     get "/api/v1/items"
 
@@ -44,23 +49,28 @@ describe "Items API" do
   end
 
   it "can create a new item" do
-    item_params = { name: "Gloves", description: "Warm and fuzzy", unit_price: 25.00 }
+    item_params = { name: "Gloves", description: "Warm and fuzzy", unit_price: 25.00 , merchant_id: Merchant.first.id }
 
     headers = { "CONTENT_TYPE" => "application/json" }
 
     post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
-    created_item = Item.last
-# require 'pry'; binding.pry
+
     expect(response).to be_successful
-    #returning nil for created_item
-    # expect(created_item.name).to eq(item_params[:name])
-    # expect(created_item.description).to eq(item_params[:description])
-    # expect(created_item.unit_price).to eq(item_params[:unit_price])
-    # expect(created_item).to have_attributes(item_params)
     expect(response.status).to eq(201)
-    #returning application/json; charset=utf-8 for content_type
-    # expect(response.content_type).to eq("application/json")
-    #returning nil for location
-    # expect(response.location).to eq("http://www.example.com/api/v1/items/#{created_item.id}")
+    expect(Item.last.name).to eq("Gloves")
+  end
+
+  xit "can update an existing item" do
+    # id = create(:item).id
+    previous_name = Item.last.name
+    item_params = { name: "Hat", description: "Soft" }
+
+    headers = { "CONTENT_TYPE" => "application/json" }
+
+    patch "/api/v1/items/#{Item.last.id}", headers: headers, params: JSON.generate(item: item_params)
+
+    expect(response).to be_successful
+    expect(response.status).to eq(200)
+    expect(Item.last.name).to_not eq(previous_name)
   end
 end
