@@ -9,6 +9,6 @@ class Api::V1::MerchantsController < ApplicationController
     @items = @merchant.items
 
     render json: Merchant.find(params[:id])
-    # render json: MerchantSerializer.new(Merchant.find(params[:id])).serializable_hash.to_json
+    render json: MerchantSerializer.new(Merchant.find(params[:id])).serializable_hash.to_json
   end
 end
