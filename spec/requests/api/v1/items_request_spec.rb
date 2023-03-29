@@ -61,7 +61,7 @@ describe "Items API" do
     patch "/api/v1/items/#{Item.last.id}", headers: headers, params: JSON.generate(item: item_params)
     item = Item.find_by(id: Item.last.id)
     # require 'pry'; binding.pry
-    # failing at status 200
+    # failing status
     expect(response).to be_successful
     expect(response.status).to eq(200)
     expect(item.name).to_not eq(previous_name)

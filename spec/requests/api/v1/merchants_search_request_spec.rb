@@ -11,6 +11,6 @@ describe "Merchants Search API" do
     merchants = JSON.parse(response.body, symbolize_names: true)
     merchants = merchants[:data]
     
-    expect(merchants[attributes]).to have_key(:name)
+    expect(merchants[:attributes]).to have_key(:name)
   end
 end

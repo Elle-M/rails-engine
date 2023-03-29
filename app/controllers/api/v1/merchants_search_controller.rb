@@ -1,5 +1,10 @@
 class Api::V1::MerchantsSearchController < ApplicationController
-  def index
-    render json: MerchantSerializer.new(Merchant.where(search_params))
+
+  def show
+    render json: MerchantSerializer.new(Merchant.find_by(search_params))
+  end
+
+  def search_params
+    params.permit(:name)
   end
 end
