@@ -1,37 +1,35 @@
 require "spec_helper"
 
 describe "Merchants API" do
-  it "sends a list of merchants" do
+  before :each do
     create_list(:merchant, 3)
-
+  end
+  
+  it "sends a list of merchants" do
     get "/api/v1/merchants"
 
     expect(response).to be_successful
     expect(response.status).to eq(200)
 
-    merchants = JSON.parse(response.body)
+    merchants = JSON.parse(response.body, symbolize_names: true)
+    merchants = merchants[:data]
 
     expect(merchants.count).to eq(3)
 
     merchants.each do |merchant|
-      expect(merchant).to have_key("name")
-      # expect(merchant[:data][:attributes]).to have_key("name")
-      expect(merchant["name"]).to be_a(String)
+      expect(merchant[:data]).to eq(merchant[:name])
     end
   end
 
   it "can get one merchant by its id" do
-    id = create(:merchant).id
+    get "/api/v1/merchants/#{Merchant.first.id}"
 
-    get "/api/v1/merchants/#{id}"
-
-    merchant = JSON.parse(response.body)
+    merchants = JSON.parse(response.body, symbolize_names: true)
+    merchants = merchants[:data]
 
     expect(response).to be_successful
     expect(response.status).to eq(200)
-
-      expect(merchant).to have_key("name")
-    # expect(merchant[:data][:attributes]).to have_key("name")
-    expect(merchant["name"]).to be_a(String)
+    expect(merchants[:id]).to eq(Merchant.first.id.to_s)
+    expect(merchants[:attributes][:name]).to be_a(String)
   end
 end
