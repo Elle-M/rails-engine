@@ -16,7 +16,7 @@ class Api::V1::ItemsController < ApplicationController
 
   def update
     item = Item.find(params[:id])
-    if Merchant.exists?(item_params[:merchant_id])
+    if Merchant.exists?(item_params[:merchant_id]) || item_params[:merchant_id] == nil
       item.update(item_params)
       render json: ItemSerializer.new(item), status: 200
     else

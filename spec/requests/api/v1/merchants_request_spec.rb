@@ -15,6 +15,7 @@ describe "Merchants API" do
     merchants = merchants[:data]
 
     expect(merchants.count).to eq(3)
+    expect(merchants).to be_an(Array)
 
     merchants.each do |merchant|
       expect(merchant[:data]).to eq(merchant[:name])
@@ -26,6 +27,7 @@ describe "Merchants API" do
 
     merchants = JSON.parse(response.body, symbolize_names: true)
     merchants = merchants[:data]
+
 
     expect(response).to be_successful
     expect(response.status).to eq(200)

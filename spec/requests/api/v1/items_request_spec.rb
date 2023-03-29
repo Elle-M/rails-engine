@@ -52,7 +52,7 @@ describe "Items API" do
     expect(Item.last.name).to eq("Gloves")
   end
 
-  xit "can update an existing item" do
+  it "can update an existing item" do
     previous_name = Item.last.name
     item_params = { name: "Hat"} 
 
@@ -60,13 +60,64 @@ describe "Items API" do
 
     patch "/api/v1/items/#{Item.last.id}", headers: headers, params: JSON.generate(item: item_params)
     item = Item.find_by(id: Item.last.id)
-    # require 'pry'; binding.pry
-    # failing status
+  
     expect(response).to be_successful
     expect(response.status).to eq(200)
     expect(item.name).to_not eq(previous_name)
     expect(item.name).to eq("Hat")
     expect(item.description).to eq(Item.last.description)
+    expect(item.unit_price).to eq(Item.last.unit_price)
+    expect(item.merchant_id).to eq(Item.last.merchant_id)
+  end
+
+  it "can update an existing item's merchant" do
+    previous_name = Item.last.name
+    item_merchant_params = { merchant_id: Merchant.first.id }
+
+    headers = { "CONTENT_TYPE" => "application/json" }
+
+    patch "/api/v1/items/#{Item.last.id}", headers: headers, params: JSON.generate(item: item_merchant_params)
+    item = Item.find_by(id: Item.last.id)
+
+    expect(response).to be_successful
+    expect(response.status).to eq(200)
+    expect(item.name).to eq(previous_name)
+    expect(item.description).to eq(Item.last.description)
+    expect(item.unit_price).to eq(Item.last.unit_price)
+    expect(item.merchant_id).to eq(Merchant.first.id)
+    expect(item.merchant_id).to_not eq(Merchant.last.id)
+    expect(item.merchant_id).to_not eq(Merchant.second.id)
+  end
+
+  it "can update an existing item's unit price" do
+    previous_price = Item.last.unit_price
+    item_params = { unit_price: 25.00 }
+
+    headers = { "CONTENT_TYPE" => "application/json" }
+
+    patch "/api/v1/items/#{Item.last.id}", headers: headers, params: JSON.generate(item: item_params)
+    item = Item.find_by(id: Item.last.id)
+
+    expect(response).to be_successful
+    expect(response.status).to eq(200)
+    expect(item.name).to eq(Item.last.name)
+    expect(item.description).to eq(Item.last.description)
+    expect(item.unit_price).to_not eq(previous_price)
+    expect(item.unit_price).to eq(25.00)
+  end
+
+  it "can render an error if the item is not updated" do
+    previous_name = Item.last.name
+    item_merchant_params = { merchant_id: 1000 }
+
+    headers = { "CONTENT_TYPE" => "application/json" }
+
+    patch "/api/v1/items/#{Item.last.id}", headers: headers, params: JSON.generate(item: item_merchant_params)
+    item = Item.find_by(id: Item.last.id)
+
+    expect(response.status).to eq(400)
+    expect(item.name).to eq(previous_name)
+    expect(item.merchant_id).to eq(Item.last.merchant_id)
   end
 
   it "can delete an item" do
