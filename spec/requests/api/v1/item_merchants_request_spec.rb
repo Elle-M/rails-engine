@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe "Items API" do
+describe "Items Search API" do
   before :each do
     create_list(:merchant, 3)
     create_list(:item, 3)

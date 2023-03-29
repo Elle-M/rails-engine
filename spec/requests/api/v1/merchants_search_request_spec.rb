@@ -12,5 +12,6 @@ describe "Merchants Search API" do
     merchants = merchants[:data]
     
     expect(merchants[:attributes]).to have_key(:name)
+    expect(merchants[:attributes][:name]).to be_a(String)
   end
 end
