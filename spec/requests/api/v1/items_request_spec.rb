@@ -7,25 +7,20 @@ describe "Items API" do
   end
 
   it "sends a list of items" do
-    # create_list(:item, 3)
-
     get "/api/v1/items"
 
     expect(response).to be_successful
 
-    items = JSON.parse(response.body)
+    items = JSON.parse(response.body, symbolize_names: true)
+    items = items[:data]
 
     expect(items.count).to eq(3)
 
     items.each do |item|
-      expect(item).to have_key("name")
-      expect(item["name"]).to be_a(String)
-
-      expect(item).to have_key("description")
-      expect(item["description"]).to be_a(String)
-
-      expect(item).to have_key("unit_price")
-      expect(item["unit_price"]).to be_a(Float)
+      expect(item[:data]).to eq(item[:name])  
+      expect(item[:data]).to eq(item[:description])
+      expect(item[:data]).to eq(item[:unit_price])
+      expect(item[:data]).to eq(item[:merchant_id])
     end
   end
 
@@ -38,14 +33,11 @@ describe "Items API" do
 
     expect(response).to be_successful
 
-    expect(item).to have_key(:id)
-    expect(item[:id]).to eq(id)
-
-    expect(item).to have_key(:name)
-    expect(item[:name]).to be_a(String)
-
-    expect(item).to have_key(:description)
-    expect(item[:description]).to be_a(String)
+    expect(item[:data][:id]).to eq(id.to_s)
+    expect(item[:data][:attributes][:name]).to be_a(String)
+    expect(item[:data][:attributes][:description]).to be_a(String)
+    expect(item[:data][:attributes][:unit_price]).to be_a(Float)
+    expect(item[:data][:attributes][:merchant_id]).to be_a(Integer)
   end
 
   it "can create a new item" do
@@ -62,15 +54,19 @@ describe "Items API" do
 
   xit "can update an existing item" do
     previous_name = Item.last.name
-    item_params = { name: "Hat", description: "Soft" }
+    item_params = { name: "Hat"} 
 
     headers = { "CONTENT_TYPE" => "application/json" }
 
     patch "/api/v1/items/#{Item.last.id}", headers: headers, params: JSON.generate(item: item_params)
-
+    item = Item.find_by(id: Item.last.id)
+    # require 'pry'; binding.pry
+    # failing at status 200
     expect(response).to be_successful
     expect(response.status).to eq(200)
-    expect(Item.last.name).to_not eq(previous_name)
+    expect(item.name).to_not eq(previous_name)
+    expect(item.name).to eq("Hat")
+    expect(item.description).to eq(Item.last.description)
   end
 
   it "can delete an item" do

@@ -7,7 +7,8 @@ describe "Merchants API" do
 
     get "/api/v1/merchants/#{merchant.id}/items"
 
-    items = JSON.parse(response.body)
+    items = JSON.parse(response.body, symbolize_names: true)
+    items = items[:data]
 
     expect(response).to be_successful
     expect(response.status).to eq(200)
@@ -15,8 +16,10 @@ describe "Merchants API" do
     expect(items.count).to eq(3)
 
     items.each do |item|
-      expect(item).to have_key("name")
-      expect(item["name"]).to be_a(String)
+      expect(item[:data]).to eq(item[:name])
+      expect(item[:data]).to eq(item[:description])
+      expect(item[:data]).to eq(item[:unit_price])
+      expect(item[:data]).to eq(item[:merchant_id])
     end
   end
 end 

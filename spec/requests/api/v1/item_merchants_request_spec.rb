@@ -4,7 +4,7 @@ describe "Items API" do
   xit "can get the merchant data for an item" do
     merchant = create(:merchant)
     item = create(:item, merchant: merchant)
-
+    #controller issue, checked controller, checked routes, no idea why this is failing
     get "/api/v1/items/#{item.id}/merchant"
 
     expect(response).to be_successful
