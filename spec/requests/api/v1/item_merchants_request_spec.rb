@@ -7,21 +7,16 @@ describe "Items API" do
   end
 
   it "can get the merchant data for an item" do
-    # merchant = create(:merchant)
-    # item = create(:item, merchant: merchant)
-    #controller issue, checked controller, checked routes, no idea why this is failing
-    # get "/api/v1/items/#{item.id}/merchant"
     get "/api/v1/items/#{Item.last.id}/merchant"
     
-
     expect(response).to be_successful
+    expect(response.status).to eq(200)
 
-    merchant = JSON.parse(response.body, symbolize_names: true)
+    merchants = JSON.parse(response.body, symbolize_names: true)
+    merchants = merchants[:data]
 
-    expect(merchant).to have_key(:id)
-    expect(merchant[:id]).to eq(merchant.id)
-
-    expect(merchant).to have_key(:name)
-    expect(merchant[:name]).to eq(merchant.name)
+    expect(merchants[:id]).to eq(Merchant.last.id.to_s)
+    expect(merchants[:attributes][:name]).to be_a(String)
+    expect(merchants[:attributes][:name]).to eq(Merchant.last.name)
   end
 end
