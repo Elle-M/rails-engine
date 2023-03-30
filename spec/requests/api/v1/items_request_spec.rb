@@ -125,8 +125,22 @@ describe "Items API" do
 
     expect{ delete "/api/v1/items/#{item.id}" }.to change(Item, :count).by(-1)
 
-    expect(response.status).to eq(200)
+    expect(response.status).to eq(204)
     expect{Item.find(item.id)}.to raise_error(ActiveRecord::RecordNotFound)
     expect(Item.count).to eq(2)
   end
+
+  # it "can delete any invoice if it only has one item on a invoice" do
+  #   item = Item.last
+  #   invoice = create(:invoice)
+  #   create(:invoice_item, item_id: item.id, invoice_id: invoice.id)
+
+  #   expect{ delete "/api/v1/items/#{item.id}" }.to change(Item, :count).by(-1)
+
+  #   expect(response.status).to eq(200)
+  #   expect{Item.find(item.id)}.to raise_error(ActiveRecord::RecordNotFound)
+  #   expect(Item.count).to eq(2)
+  #   expect{Invoice.find(invoice.id)}.to raise_error(ActiveRecord::RecordNotFound)
+  #   expect(Invoice.count).to eq(1)
+  # end 
 end
