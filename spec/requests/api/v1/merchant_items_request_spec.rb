@@ -17,12 +17,11 @@ describe "Merchants API" do
     expect(response.status).to eq(200)
 
     expect(merchant.items.count).to eq(3)
-    end
   end
 
-  # it "returns an error if merchant does not exist" do
-  #   get "/api/v1/merchants/1/items"
+  it "returns an error if merchant does not exist" do
+    get "/api/v1/merchants/1/items"
 
-  #   expect(response.status).to eq(404)
-  # end
+    expect(response.status).to eq(404)
+  end
 end 
