@@ -4,6 +4,7 @@ class Api::V1::MerchantsSearchController < ApplicationController
     render json: MerchantSerializer.new(Merchant.find_by(search_params))
   end
 
+# private
   def search_params
     params.permit(:name)
   end
