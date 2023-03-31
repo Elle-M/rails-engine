@@ -13,11 +13,11 @@ private
 
   def find_by_name
     name = params[:name]
-    if name
+    # if name
       render json: ItemSerializer.new(Item.where('lower(name) ILIKE ?', name)).order(:name).first
-    else
-      render json: { error: "No items found"}, status: 404
-    end
+    # else
+    #   render json: { error: "No items found"}, status: 404
+    # end
   end
 
   def find_by_price

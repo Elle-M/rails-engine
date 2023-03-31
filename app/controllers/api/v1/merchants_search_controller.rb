@@ -21,8 +21,8 @@ private
     end
     if merchant 
       render json: MerchantSerializer.new(merchant)
-    else
-      render json: { error: "No merchant found"}, status: 404
+    # else
+    #   render json: { error: "No merchant found"}, status: 404
     end
   end
 end
