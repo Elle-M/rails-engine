@@ -3,7 +3,7 @@ class Api::V1::MerchantsSearchController < ApplicationController
     if search_params[:name]
       find_by_name
     else
-      render json: MerchantSerializer.new(Merchant.find_by(search_params))
+      render json: { error: "No merchant found"}, status: 404
     end
   end  
 
@@ -17,9 +17,7 @@ private
   def find_by_name
     name = params[:name]
     if name
-      merchant = Merchant.where('lower(name) = ?', name.downcase).order(:name).first
-    else
-      merchant = Merchant.first
+      merchant = Merchant.where('lower(name) ILIKE ?', name ).order(:name).first
     end
     if merchant 
       render json: MerchantSerializer.new(merchant)

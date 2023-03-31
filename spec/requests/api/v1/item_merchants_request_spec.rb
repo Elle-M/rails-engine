@@ -23,6 +23,7 @@ describe "Items Search API" do
   xit "returns an error if item does not exist" do
     get "/api/v1/items/1/merchant"
 
+    expect(response).to_not be_successful
     expect(response.status).to eq(404)
   end
 end
